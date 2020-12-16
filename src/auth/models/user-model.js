@@ -24,6 +24,6 @@ usersSchema.statics.authenticateBasic = async function (username, password) {
   throw new Error('Invalid User');
 }
 
-const Users = mongoose.model('users', usersSchema);
+//const Users = mongoose.model('users', usersSchema);
 
 module.exports = Users;

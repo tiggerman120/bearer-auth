@@ -5,9 +5,9 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const base64 = require('base-64');
 const mongoose = require('mongoose');
-const Users = require('./src/models/user-model.js')
+const Users = require('./auth/models/user-model.js')
 // our middleware
-const basicAuth = require('./src/auth/basic-auth-middleware.js');
+const basicAuth = require('./auth/middleware/basic.js');
 
 // Prepare the express app
 const app = express();
