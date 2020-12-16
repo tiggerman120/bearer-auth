@@ -1,6 +1,6 @@
 'use strict';
 
-const server = require('../src/server').server;
+const server = require('../src/routes').server;
 const supergoose = require('@code-fellows/supergoose');
 
 const mockRequest = supergoose(server);
