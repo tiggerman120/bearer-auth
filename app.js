@@ -21,7 +21,9 @@ app.use(express.urlencoded({ extended: true }));
 // Create a mongoose model
 
 //const Users = mongoose.model('users', usersSchema);
-
+app.get('/', (req, res) => {
+  res.status(200).json('hello world');
+})
 // Signup Route -- create a new user
 // Two ways to test this route with httpie
 // echo '{"username":"john","password":"foo"}' | http post :3000/signup
