@@ -2,6 +2,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const users = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
@@ -14,6 +15,7 @@ users.virtual('token').get(function () {
   let tokenObject = {
     username: this.username,
   }
+  
   return jwt.sign(tokenObject, process.env.SECRET, {expiresIn: '15 minutes'})
 });
 
