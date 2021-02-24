@@ -6,7 +6,8 @@ const authRouter = express.Router();
 const User = require('./auth/models/users.js');
 const Todo = require('./auth/models/todo.js');
 const basicAuth = require('./auth/middleware/basic.js')
-const bearerAuth = require('./auth/middleware/bearer.js')
+const bearerAuth = require('./auth/middleware/bearer.js');
+const { findOneAndUpdate } = require('./auth/models/users.js');
 
 authRouter.post('/signup', async (req, res, next) => {
   try {
@@ -70,9 +71,23 @@ authRouter.get('/todo', async (req, res, next) => {
 });
 
 
-authRouter.put('/todo/:id', async (req, res, next) => {
-  const id = req.params.id
-  console.log(id)
+authRouter.put('/todo/:_id', async (req, res, next) => {
+  try {
+    const updatedItem = await Todo.findByIdAndUpdate(req.params._id, req.body, { new: true, useFindAndModify: false })
+    console.log(updatedItem)
+    res.status(200).json(updatedItem)
+    if (!updateditem) {
+      return res.status(404).send(`no item to update`)
+    }
+    res.status(201).send(updatedItem)
+  }
+  catch {
+    (error) => {
+      res.status(400).json({
+        error: error
+      })
+    }
+  }
 })
 
 authRouter.delete('/todo/:_id', async (req, res) => {
