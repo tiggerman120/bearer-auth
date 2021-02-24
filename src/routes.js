@@ -92,10 +92,11 @@ authRouter.put('/todo/:_id', async (req, res, next) => {
 
 authRouter.delete('/todo/:_id', async (req, res) => {
   try {
-    await Todo.findOneAndDelete({ _id: req.params._id })
-
+    const result = await Todo.findOneAndDelete({ _id: req.params._id })
+    console.log(result)
     res.status(200).json({
-      message: 'Deleted'
+      message: 'Deleted',
+      result: result,
     })
   }
   catch {
