@@ -6,7 +6,8 @@ const authRouter = express.Router();
 const User = require('./auth/models/users.js');
 const Todo = require('./auth/models/todo.js');
 const basicAuth = require('./auth/middleware/basic.js')
-const bearerAuth = require('./auth/middleware/bearer.js')
+const bearerAuth = require('./auth/middleware/bearer.js');
+const { findOneAndUpdate } = require('./auth/models/users.js');
 
 authRouter.post('/signup', async (req, res, next) => {
   try {
@@ -19,7 +20,8 @@ authRouter.post('/signup', async (req, res, next) => {
       token: userRecord.token
     };
     res.status(201).json(output);
-  } catch (e) { res.status(403).send(e.message);
+  } catch (e) {
+    res.status(403).send(e.message);
     next()
   }
 });
@@ -49,46 +51,60 @@ authRouter.post('/todo', async (req, res, next) => {
       token: todoRecord.token
     };
     res.status(201).json(output);
-  } catch (e) { res.status(403).send(e.message);
+  } catch (e) {
+    res.status(403).send(e.message);
     next()
   }
 })
 
 authRouter.get('/todo/:id', async (req, res, next) => {
-  const id = req.params._id;
-  console.log(id)
-  const todo = await Todo.findOne({_id: id}).exec()
+  const todo = await Todo.findOne({ id: req.params._id }).exec()
   res.status(200).json(todo)
 })
 
 
 authRouter.get('/todo', async (req, res, next) => {
-  console.log(req)
+
   const todo = await Todo.find({});
   const list = todo.map(item => (item));
   res.status(200).json(list);
 });
 
 
-authRouter.put('/todo/:id', async (req, res, next) => {
-  const id = req.params.id
-  console.log(id)
-})
-
-authRouter.delete('/todo/:_id', (req, res) => {
-  Todo.deleteOne({ _id: req.params._id }),then(
-    () => {
-      res.status(200).json({
-        message: 'Deleted'
-      })
+authRouter.put('/todo/:_id', async (req, res, next) => {
+  try {
+    const updatedItem = await Todo.findByIdAndUpdate(req.params._id, req.body, { new: true, useFindAndModify: false })
+    console.log(updatedItem)
+    res.status(200).json(updatedItem)
+    if (!updateditem) {
+      return res.status(404).send(`no item to update`)
     }
-  ).catch(
+    res.status(201).send(updatedItem)
+  }
+  catch {
     (error) => {
       res.status(400).json({
-        error:error
+        error: error
       })
     }
-  )
+  }
+})
+
+authRouter.delete('/todo/:_id', async (req, res) => {
+  try {
+    await Todo.findOneAndDelete({ _id: req.params._id })
+
+    res.status(200).json({
+      message: 'Deleted'
+    })
+  }
+  catch {
+    (error) => {
+      res.status(400).json({
+        error: error
+      })
+    }
+  }
 })
 
 authRouter.get('/secret', bearerAuth, async (req, res, next) => {
