@@ -45,12 +45,9 @@ authRouter.post('/todo', async (req, res, next) => {
     let todo = new Todo(req.body);
     console.log(todo)
     const todoRecord = await todo.save(req.body);
-    console.log(todoRecord)
-    const output = {
-      user: todoRecord,
-      token: todoRecord.token
-    };
-    res.status(201).json(output);
+    console.log(`todo record`, todoRecord)
+    
+    res.status(201).json(todoRecord);
   } catch (e) {
     res.status(403).send(e.message);
     next()
