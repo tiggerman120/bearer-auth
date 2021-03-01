@@ -5,8 +5,9 @@ const mongoose = require('mongoose');
 const todo = mongoose.Schema({
   text: { type: String, required: true },
   assignee: { type: String },
-  complete: { type: Boolean, default:false },
+  complete: { type: Boolean, default: false },
   difficulty: { type: Number, default: 1 },
+  editing: { type: Boolean, default: false },
 });
 
 module.exports = mongoose.model('todo', todo);
